@@ -8,8 +8,7 @@ Each model is run **with** the skill and **without** it, on the same tasks, and 
 against a fixed numerical ground truth. The question: does giving the model the toolkit
 change whether it gets the physics right?
 
-> Research code released alongside the [manuscript draft](../NM-Agent-draft/AIAgentNMNS0410.pdf).
-> The harness was run against a private
+> Research code released alongside the manuscript. The harness was run against a private
 > remote machine using an agent framework (`openclaw`); paths and host identifiers in the
 > scripts reflect that environment and must be adapted to reproduce. See
 > [`config/SETUP_NOTES.md`](config/SETUP_NOTES.md) and [`harness/README.md`](harness/README.md).
