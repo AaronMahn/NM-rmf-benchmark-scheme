@@ -1,0 +1,68 @@
+拉氏量为：
+- sp.Integer(1) * psibar_i_dslash_psi - P['m_N'] * psibar_psi
+- -sp.Rational(1,2) * P['m_sigma']**2 * s**2
+- -sp.Rational(1,3) * P['g2'] * s**3
+- -sp.Rational(1,4) * P['g3'] * s**4
+- -sp.Rational(1,2) * P['g4'] * s**2 * o**2
+- -P['g6'] * s * r**2
+- -P['g7'] * s * o**2
+- +sp.Rational(1,2) * P['m_omega']**2 * o**2
+- +sp.Rational(1,4) * P['c3'] * o**4
+- +sp.Rational(1,2) * P['c4'] * o**2 * r**2
+- +sp.Rational(1,2) * P['m_rho']**2 * r**2
+- +sp.Rational(1,4) * P['d3'] * r**4
+- -sp.Rational(1,2) * P['m_a0']**2 * a**2
+- +sp.Rational(1,4) * P['b3'] * a**4
+- +sp.Rational(1,2) * P['b4'] * a**2 * r**2
+- +sp.Rational(1,2) * P['b5'] * s * a**2
+- +sp.Rational(1,2) * P['b6'] * a**2 * s**2
+- +sp.Rational(1,2) * P['b7'] * a**2 * o**2
+- +P['b8'] * a * r * o * s
+- +P['b9'] * a * r * o
+- -P['g_sigma'] * s * psibar_psi
+- -P['g_omega'] * o * psibar_gamma0_psi
+- -P['g_rho'] * r * psibar_gamma0_tau3_psi
+- -P['g_a0'] * a * psibar_tau3_psi
+
+耦合系数为：
+- m_N = 939.0
+- m_sigma = 633.852652923862
+- m_omega = 783.0
+- m_rho = 770.0
+- m_a0 = 980.0
+- g_sigma = -10.75674989219007
+- g_omega = 14.276424714912427
+- g_rho = 6.582619061769409
+- g_a0 = -5.388585627902832
+- g2 = 1608.5806080241064
+- g3 = 6.034695889028326
+- g4 = 1.163624891532312
+- g6 = 37.28156090042297
+- g7 = 155.4808733658441
+- c3 = 165.2901110680093
+- c4 = 210.69149720662395
+- d3 = 5.3910994022920855
+- b3 = 70.4898486951235
+- b4 = 2.566681427494239
+- b5 = 114.56579002187469
+- b6 = 167.81285493010546
+- b7 = 0.1019965127712656
+- b8 = 16.746007332882037
+- b9 = -9.594223611390511
+
+基于此计算：
+- 在 rho_B = 0.16 fm^-3 处：
+  - 束缚能 binding_energy_MeV
+  - 压强 pressure_MeV_fm3
+  - 抗压系数 compressibility_MeV
+  - 对称能 symmetry_energy_MeV
+- 在中心密度 rho_c = 4.0 fm^-3、beta 平衡、低密 0.08 fm^-3 接入 BPS crust 后：
+  - 质量 M_msun
+  - 半径 R_km
+- 最后输出保存为 27.npy，顺序依次为：
+  - binding_energy_MeV
+  - pressure_MeV_fm3
+  - compressibility_MeV
+  - symmetry_energy_MeV
+  - M_msun
+  - R_km

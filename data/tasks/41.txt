@@ -1,0 +1,70 @@
+拉氏量为：
+- sp.Integer(1) * psibar_i_dslash_psi - P['m_N'] * psibar_psi
+- -sp.Rational(1,2) * P['m_sigma']**2 * s**2
+- -sp.Rational(1,3) * P['g2'] * s**3
+- -sp.Rational(1,4) * P['g3'] * s**4
+- -sp.Rational(1,2) * P['g4'] * s**2 * o**2
+- -sp.Rational(1,2) * P['g5'] * s**2 * r**2
+- -P['g6'] * s * r**2
+- -P['g7'] * s * o**2
+- +sp.Rational(1,2) * P['m_omega']**2 * o**2
+- +sp.Rational(1,4) * P['c3'] * o**4
+- +sp.Rational(1,2) * P['c4'] * o**2 * r**2
+- +sp.Rational(1,2) * P['m_rho']**2 * r**2
+- +sp.Rational(1,4) * P['d3'] * r**4
+- -sp.Rational(1,2) * P['m_a0']**2 * a**2
+- +sp.Rational(1,4) * P['b3'] * a**4
+- +sp.Rational(1,2) * P['b4'] * a**2 * r**2
+- +sp.Rational(1,2) * P['b5'] * s * a**2
+- +sp.Rational(1,2) * P['b6'] * a**2 * s**2
+- +sp.Rational(1,2) * P['b7'] * a**2 * o**2
+- +P['b8'] * a * r * o * s
+- +P['b9'] * a * r * o
+- -P['g_sigma'] * s * psibar_psi
+- -P['g_omega'] * o * psibar_gamma0_psi
+- -P['g_rho'] * r * psibar_gamma0_tau3_psi
+- -P['g_a0'] * a * psibar_tau3_psi
+
+耦合系数为：
+- m_N = 939.0
+- m_sigma = 1168.490142558041
+- m_omega = 783.0
+- m_rho = 770.0
+- m_a0 = 980.0
+- g_sigma = -9.665531193238122
+- g_omega = 14.256884558970862
+- g_rho = 7.826843355994871
+- g_a0 = -7.133444182635645
+- g2 = 1608.5426581180886
+- g3 = 6.877444977734455
+- g4 = 1.3478155846324285
+- g5 = 1.1248111214925296
+- g6 = 37.56585917273803
+- g7 = 117.2041289684349
+- c3 = 190.7531067019039
+- c4 = 234.90854464842263
+- d3 = 4.875337502135482
+- b3 = 75.54043068835985
+- b4 = 2.5340174801807676
+- b5 = 139.20057101578766
+- b6 = 189.79108249656417
+- b7 = 0.1331066158830959
+- b8 = 21.025547047543654
+- b9 = -9.16689505939384
+
+基于此计算：
+- 在 rho_B = 0.16 fm^-3 处：
+  - 束缚能 binding_energy_MeV
+  - 压强 pressure_MeV_fm3
+  - 抗压系数 compressibility_MeV
+  - 对称能 symmetry_energy_MeV
+- 在中心密度 rho_c = 4.0 fm^-3、beta 平衡、低密 0.08 fm^-3 接入 BPS crust 后：
+  - 质量 M_msun
+  - 半径 R_km
+- 最后输出保存为 41.npy，顺序依次为：
+  - binding_energy_MeV
+  - pressure_MeV_fm3
+  - compressibility_MeV
+  - symmetry_energy_MeV
+  - M_msun
+  - R_km

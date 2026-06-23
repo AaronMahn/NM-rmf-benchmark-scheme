@@ -1,0 +1,22 @@
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# secrets — never commit keys, tokens, or live openclaw configs
+*.key
+.env
+**/auth-profiles.json
+**/openclaw.json
+config/openclaw_config_snapshot.json.real
+
+# scratch run logs
+*.run.log
+*.prunlog

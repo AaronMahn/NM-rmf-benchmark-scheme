@@ -1,0 +1,5 @@
+# Python dependencies for the rmf-toolkit skill + harness.
+# (The agent framework `openclaw` and per-provider API clients are separate and not pip-installable here.)
+numpy
+scipy
+sympy

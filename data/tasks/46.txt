@@ -1,0 +1,64 @@
+拉氏量为：
+- sp.Integer(1) * psibar_i_dslash_psi - P['m_N'] * psibar_psi
+- -sp.Rational(1,2) * P['m_sigma']**2 * s**2
+- -sp.Rational(1,3) * P['g2'] * s**3
+- -sp.Rational(1,4) * P['g3'] * s**4
+- -sp.Rational(1,2) * P['g4'] * s**2 * o**2
+- -sp.Rational(1,2) * P['g5'] * s**2 * r**2
+- -P['g6'] * s * r**2
+- +sp.Rational(1,2) * P['m_omega']**2 * o**2
+- +sp.Rational(1,4) * P['c3'] * o**4
+- +sp.Rational(1,2) * P['c4'] * o**2 * r**2
+- +sp.Rational(1,2) * P['m_rho']**2 * r**2
+- -sp.Rational(1,2) * P['m_a0']**2 * a**2
+- +sp.Rational(1,2) * P['b4'] * a**2 * r**2
+- +sp.Rational(1,2) * P['b5'] * s * a**2
+- +sp.Rational(1,2) * P['b6'] * a**2 * s**2
+- +sp.Rational(1,2) * P['b7'] * a**2 * o**2
+- +P['b8'] * a * r * o * s
+- +P['b9'] * a * r * o
+- -P['g_sigma'] * s * psibar_psi
+- -P['g_omega'] * o * psibar_gamma0_psi
+- -P['g_rho'] * r * psibar_gamma0_tau3_psi
+- -P['g_a0'] * a * psibar_tau3_psi
+
+耦合系数为：
+- m_N = 939.0
+- m_sigma = 743.968573979965
+- m_omega = 783.0
+- m_rho = 770.0
+- m_a0 = 980.0
+- g_sigma = -11.250867388721582
+- g_omega = 14.944728998823802
+- g_rho = 6.846394650588992
+- g_a0 = -7.168670208147189
+- g2 = 1867.379348292036
+- g3 = 6.369423613546733
+- g4 = 1.3965619283237818
+- g5 = 1.080118139952226
+- g6 = 37.63227736764381
+- c3 = 169.3787964907583
+- c4 = 213.9910526420951
+- b4 = 2.4898419298943226
+- b5 = 131.68443353665958
+- b6 = 216.00209174104265
+- b7 = 0.10523594138016264
+- b8 = 20.497458291673116
+- b9 = -10.647394029080033
+
+基于此计算：
+- 在 rho_B = 0.16 fm^-3 处：
+  - 束缚能 binding_energy_MeV
+  - 压强 pressure_MeV_fm3
+  - 抗压系数 compressibility_MeV
+  - 对称能 symmetry_energy_MeV
+- 在中心密度 rho_c = 4.0 fm^-3、beta 平衡、低密 0.08 fm^-3 接入 BPS crust 后：
+  - 质量 M_msun
+  - 半径 R_km
+- 最后输出保存为 46.npy，顺序依次为：
+  - binding_energy_MeV
+  - pressure_MeV_fm3
+  - compressibility_MeV
+  - symmetry_energy_MeV
+  - M_msun
+  - R_km

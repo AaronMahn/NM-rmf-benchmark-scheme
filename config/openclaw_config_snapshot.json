@@ -1,0 +1,30 @@
+{
+  "_comment": "Sanitized snapshot of the openclaw setup for the final RMF skill benchmark (parallel pipeline). API KEYS ARE NOT INCLUDED (they live per-agent in ~/.openclaw/agents/<id>/agent/auth-profiles.json). Host identifiers are generic; benchmark root = $P26_ROOT (default ~/P26exp). An earlier 2026-06-17 snapshot is archived separately, outside this repository.",
+  "providers": {
+    "openrouter": {"baseUrl": "https://openrouter.ai/api/v1", "api": "openai-completions"},
+    "deepseek":   {"baseUrl": "https://api.deepseek.com/v1", "api": "openai-completions"},
+    "moonshot":   {"baseUrl": "https://api.moonshot.cn/v1", "api": "openai-completions"},
+    "dashscope":  {"baseUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1", "api": "openai-completions"},
+    "google":     {"baseUrl": "https://generativelanguage.googleapis.com", "api": "google-generative-ai"}
+  },
+  "model_lineup_final": {
+    "gpt55":    {"model": "openrouter/openai/gpt-5.5"},
+    "claude":   {"model": "openrouter/anthropic/claude-opus-4.8"},
+    "gemini":   {"model": "google/gemini-3.1-pro-preview"},
+    "qwen":     {"model": "dashscope/qwen3.7-max"},
+    "deepseek": {"model": "deepseek/deepseek-v4-pro"},
+    "kimi":     {"model": "moonshot/kimi-k2.6"}
+  },
+  "excluded": {"gpt54": {"model": "openrouter/openai/gpt-5.4", "note": "tested earlier, excluded from the final parallel run"}},
+  "agent_layout": {
+    "base_agents": "<model>_w / <model>_wo  (workspace ws/<model>_w has skills/rmf-toolkit/; ws/<model>_wo has none)",
+    "per_sample_clones": "clone_agents.py creates <model>_w0..2 and <model>_wo0..2, each with its own workspace copy, for true parallel runs",
+    "binding": "openclaw.json agents[].model is the source of truth (runner passes no --model flag)",
+    "config_files": "~/.openclaw/agents/<id>/agent/{models.json, auth-profiles.json, sessions/}"
+  },
+  "run_mode": {
+    "embedded": "openclaw agent --local (run_cell_local.py) to avoid single-gateway contention; tokens recovered from the session .jsonl",
+    "concurrency": "6-way for OpenRouter/Google/DashScope models; 2-way paired (prun2.py) for native deepseek/kimi keys (rate-limit throttling)"
+  },
+  "hooks_session_memory_enabled": false
+}

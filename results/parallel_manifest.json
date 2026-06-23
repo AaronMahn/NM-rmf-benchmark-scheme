@@ -1,0 +1,128 @@
+{
+  "gpt55": {
+    "model": "openrouter/openai/gpt-5.5",
+    "samples": [
+      8,
+      32,
+      46
+    ],
+    "runtag": "prun",
+    "agents": {
+      "with_skill": [
+        "gpt55_w0",
+        "gpt55_w1",
+        "gpt55_w2"
+      ],
+      "without_skill": [
+        "gpt55_wo0",
+        "gpt55_wo1",
+        "gpt55_wo2"
+      ]
+    }
+  },
+  "claude": {
+    "model": "openrouter/anthropic/claude-opus-4.8",
+    "samples": [
+      23,
+      94,
+      96
+    ],
+    "runtag": "prun",
+    "agents": {
+      "with_skill": [
+        "claude_w0",
+        "claude_w1",
+        "claude_w2"
+      ],
+      "without_skill": [
+        "claude_wo0",
+        "claude_wo1",
+        "claude_wo2"
+      ]
+    }
+  },
+  "gemini": {
+    "model": "google/gemini-3.1-pro-preview",
+    "samples": [
+      11,
+      45,
+      62
+    ],
+    "runtag": "prun",
+    "agents": {
+      "with_skill": [
+        "gemini_w0",
+        "gemini_w1",
+        "gemini_w2"
+      ],
+      "without_skill": [
+        "gemini_wo0",
+        "gemini_wo1",
+        "gemini_wo2"
+      ]
+    }
+  },
+  "qwen": {
+    "model": "dashscope/qwen3.7-max",
+    "samples": [
+      6,
+      8,
+      93
+    ],
+    "runtag": "prun",
+    "agents": {
+      "with_skill": [
+        "qwen_w0",
+        "qwen_w1",
+        "qwen_w2"
+      ],
+      "without_skill": [
+        "qwen_wo0",
+        "qwen_wo1",
+        "qwen_wo2"
+      ]
+    }
+  },
+  "deepseek": {
+    "model": "deepseek/deepseek-v4-pro",
+    "samples": [
+      57,
+      66,
+      71
+    ],
+    "runtag": "prun",
+    "agents": {
+      "with_skill": [
+        "deepseek_w0",
+        "deepseek_w1",
+        "deepseek_w2"
+      ],
+      "without_skill": [
+        "deepseek_wo0",
+        "deepseek_wo1",
+        "deepseek_wo2"
+      ]
+    }
+  },
+  "kimi": {
+    "model": "moonshot/kimi-k2.6",
+    "samples": [
+      16,
+      21,
+      36
+    ],
+    "runtag": "prun",
+    "agents": {
+      "with_skill": [
+        "kimi_w0",
+        "kimi_w1",
+        "kimi_w2"
+      ],
+      "without_skill": [
+        "kimi_wo0",
+        "kimi_wo1",
+        "kimi_wo2"
+      ]
+    }
+  }
+}
