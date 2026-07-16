@@ -8,9 +8,9 @@ Each model is run **with** the skill and **without** it, on the same tasks, and 
 against a fixed numerical ground truth. The question: does giving the model the toolkit
 change whether it gets the physics right?
 
-> Research code released alongside the manuscript. The harness was run against a private
-> remote machine using an agent framework (`openclaw`); paths and host identifiers in the
-> scripts reflect that environment and must be adapted to reproduce. See
+> Research code released alongside the manuscript. The benchmark harness is agent-driven and
+> depends on an `openclaw` deployment plus provider credentials; some scripts require local
+> adaptation to reproduce. See
 > [`config/SETUP_NOTES.md`](config/SETUP_NOTES.md) and [`harness/README.md`](harness/README.md).
 
 ## The task
@@ -72,7 +72,7 @@ benchmark_scheme/
 ├── data/
 │   ├── tasks/0.txt … 99.txt   ← the 100 task prompts
 │   └── gt/                    ← ground truth (targets_100x6.npy + columns)
-├── config/                    ← setup notes + sanitized openclaw config snapshot
+├── config/                    ← setup notes for the published run configuration
 └── results/                   ← latest run (see below)
 ```
 
@@ -109,8 +109,8 @@ slow/rate-limited the day it ran).
 
 ## Reproducing
 
-This is agent-driven and depends on the `openclaw` agent framework, per-provider API keys, and
-a machine to host the agents; it is not a one-command pipeline. The outline:
+This is agent-driven and depends on the `openclaw` agent framework, provider credentials, and a
+machine to host the agents; it is not a one-command pipeline. The outline:
 
 1. Stage `skill/rmf-toolkit/` into each `_w` agent workspace; leave `_wo` workspaces without it.
 2. `harness/clone_agents.py` — create per-sample agent clones for true parallelism.
@@ -120,6 +120,5 @@ a machine to host the agents; it is not a one-command pipeline. The outline:
 4. `harness/prun_collect.py <model>` — collect predictions + tokens, score against GT.
 5. `harness/aggregate_parallel.py` — build `results/SUMMARY_parallel.md`.
 
-Set `P26_ROOT` to point the agent-orchestration scripts at your benchmark root (defaults to
-`~/P26exp`). See `harness/README.md` for each script and `config/SETUP_NOTES.md` for environment
-details.
+Set `P26_ROOT` to point the agent-orchestration scripts at your benchmark root. See
+`harness/README.md` for each script and `config/SETUP_NOTES.md` for environment details.

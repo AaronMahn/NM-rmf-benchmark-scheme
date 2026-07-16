@@ -1,60 +1,46 @@
-# Setup & operating notes (final parallel pipeline)
+# Setup notes (published summary)
 
-How the final benchmark was run. **No API keys are stored in this folder.** Host identifiers are
-generic; an earlier (2026-06-17) snapshot of the initial setup is archived under
-a separate archive outside this repository.
+High-level notes on the configuration used for the final paired/parallel benchmark. **No API keys
+are stored in this folder.** Detailed host-specific setup snapshots remain outside this repository.
 
-## Host
+## Environment
 
-- An agent host running the `openclaw` agent framework (`openclaw` CLI on `PATH`).
-- Benchmark root `P26_ROOT` (default `~/P26exp`): holds `tasks/`, per-agent workspaces `ws/<id>/`,
-  and `results/cells/<agent>/`. Agent config + session stores live under `~/.openclaw/agents/<id>/`.
-- Runs are kept alive across disconnects with `screen` + `caffeinate`. The repo's `data/` and
-  `skill/` are the canonical task prompts, ground truth, and skill.
+- An `openclaw` deployment is required to run the benchmark harness.
+- `P26_ROOT` should point at the benchmark working tree used by the orchestration scripts.
+- The repository's `data/` and `skill/` directories are the canonical task prompts, ground truth,
+  and skill contents used by the published run.
 
 ## Model lineup (final run: 6 models)
 
-| key | binding | provider | base URL |
-|-----|---------|----------|----------|
-| gpt55 | `openrouter/openai/gpt-5.5` | OpenRouter | `https://openrouter.ai/api/v1` |
-| claude | `openrouter/anthropic/claude-opus-4.8` | OpenRouter | `https://openrouter.ai/api/v1` |
-| gemini | `google/gemini-3.1-pro-preview` | Google (native) | `https://generativelanguage.googleapis.com` |
-| qwen | `dashscope/qwen3.7-max` | DashScope (native) | `https://dashscope.aliyuncs.com/compatible-mode/v1` |
-| deepseek | `deepseek/deepseek-v4-pro` | DeepSeek (native) | `https://api.deepseek.com/v1` |
-| kimi | `moonshot/kimi-k2.6` | Moonshot (native) | `https://api.moonshot.cn/v1` |
+| key | binding | provider |
+|-----|---------|----------|
+| gpt55 | `openrouter/openai/gpt-5.5` | OpenRouter |
+| claude | `openrouter/anthropic/claude-opus-4.8` | OpenRouter |
+| gemini | `google/gemini-3.1-pro-preview` | Google |
+| qwen | `dashscope/qwen3.7-max` | DashScope |
+| deepseek | `deepseek/deepseek-v4-pro` | DeepSeek |
+| kimi | `moonshot/kimi-k2.6` | Moonshot |
 
-`gpt-5.4` (`openrouter/openai/gpt-5.4`) was tested earlier but **excluded** from the final
-parallel run. Each provider's key lives in the agent's `~/.openclaw/agents/<id>/agent/auth-profiles.json`
-(and inline in `models.json`); the model binding in `openclaw.json` is the source of truth — the
-runner passes no `--model` flag.
+`gpt-5.4` was tested earlier but excluded from the final parallel run.
 
-## Agent layout (per-sample clones for true parallelism)
+## Agent layout
 
-Base agents `<model>_w` / `<model>_wo` (workspace `ws/<model>_w` contains `skills/rmf-toolkit/`;
-`ws/<model>_wo` has no skill). For the final paired/parallel run, `harness/clone_agents.py`
-clones each into 6 per-sample agents `<model>_w0..2` and `<model>_wo0..2`, each with its own
-workspace copy, so the 3 samples in a condition can run simultaneously without collisions.
+- Base agents are organized as `<model>_w` and `<model>_wo` for the with-skill and without-skill
+  conditions.
+- `harness/clone_agents.py` expands each base agent into per-sample clones so paired samples can
+  run concurrently without workspace collisions.
 
 ## Run mode
 
-- Agents run in **embedded** mode (`openclaw agent --local`, via `harness/run_cell_local.py`) so 6
-  concurrent agents don't overload a single gateway. Token usage is recovered from the session
-  `.jsonl` (stdout carries no usage in `--local`).
-- Concurrency: **6-way** (3 samples × 2 conditions at once) for the OpenRouter/Google/DashScope
-  models; **2-way paired** (`harness/prun2.py`) for the native deepseek/kimi keys, which throttle
-  under 6 simultaneous requests.
+- The published run used paired execution: 3 samples for the with-skill condition and the matching
+  3 samples for the without-skill condition.
+- `harness/prun.py` was used for the general 6-way parallel case, while `harness/prun2.py` was
+  used when lower concurrency was needed for provider stability.
+- `harness/run_cell_local.py` runs one agent on one sample and records the prediction vector plus
+  per-run metadata.
 
-## Hygiene — before any run
+## Reproduction notes
 
-1. `openclaw hooks disable session-memory`.
-2. Per sample, a fresh session id (`<agent>_<runtag>_s<N>`); clear stale `sessions/*.lock`.
-3. The task message appends the no-scan instruction (couplings are random fixed inputs; compute
-   forward; never scan/fit to empirical values). Grep `严禁扫描` to confirm.
-4. `cell_dir` / `ws_dir` are absolute; the agent is told the absolute output `.npy` path.
-
-## Gotchas
-
-- **Native APIs throttle under high concurrency** (deepseek, kimi) — drop to 2-way and/or raise the
-  per-task timeout if runs hit the 600 s cap.
-- **One gateway only** — multiple gateways cause a split-brain that wedges concurrent agents;
-  embedded (`--local`) mode sidesteps this.
+- Keep the task prompt's no-scan instruction intact: couplings are fixed random inputs and must be
+  handled by direct forward computation.
+- If reproducing on a different host, adapt local orchestration details to your own deployment.
