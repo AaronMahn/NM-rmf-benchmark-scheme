@@ -68,7 +68,6 @@ benchmark_scheme/
 ├── requirements.txt
 ├── skill/rmf-toolkit/         ← the skill under test (SKILL.md + scripts/ + bps.dat)
 ├── harness/                   ← runners, collector, scorers (see harness/README.md)
-│   └── legacy/                ← earlier sequential/gateway-era harness (superseded)
 ├── data/
 │   ├── tasks/0.txt … 99.txt   ← the 100 task prompts
 │   └── gt/                    ← ground truth (targets_100x6.npy + columns)
@@ -77,7 +76,7 @@ benchmark_scheme/
 ```
 
 Superseded material (earlier result sets, the recalibration process, the skill-development
-history, and the initial config snapshot) is kept in a separate archive outside this
+history, the initial config snapshot, and earlier harness variants) is kept in a separate archive outside this
 repository, not in the published tree.
 
 ## Results in `results/`
@@ -91,8 +90,8 @@ excluded), 3 random samples each, both conditions run at the same time.
 - `par_bundle_<model>/results.json` — per-model bundles.
 - `parallel_manifest.json` — the samples drawn per model.
 
-Earlier result sets (the sequential single- and two-set-per-model runs, and their scored
-summaries) are kept in the separate archive outside this repository.
+Earlier result sets (including the sequential single- and two-set-per-model runs and their
+scored summaries) are kept in the separate archive outside this repository.
 
 ### Headline finding
 

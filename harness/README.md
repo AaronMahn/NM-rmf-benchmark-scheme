@@ -37,8 +37,5 @@ and runs anywhere from a clone.
    `results/SUMMARY_parallel.md`. Self-contained (repo-relative); run from anywhere:
    `python3 harness/aggregate_parallel.py`.
 
-## `legacy/`
-
-The earlier **sequential / gateway-mode** harness, superseded by the parallel pipeline above but
-kept for provenance: `run_cell.py`, `scheme_run.py`, `scheme_collect.py`, `scheme_teardown.sh`,
-`orchestrate.py`, `score.py`, `bench_index.py`, `aggregate_results.py`.
+Earlier harness variants are archived outside this repository and are not part of the published
+tree.
