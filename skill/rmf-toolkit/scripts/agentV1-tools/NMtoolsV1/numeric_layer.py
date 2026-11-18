@@ -3,7 +3,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 import numpy as np
 import sympy as sp
-from scipy.optimize import fsolve
+try:
+    from .solver_checks import checked_field_solve
+except ImportError:  # Also support the documented top-level module imports.
+    from solver_checks import checked_field_solve
 
 HBARC = 197.326968
 PI = np.pi
@@ -78,7 +81,15 @@ def solve_fields(analytic_model, params: dict, rho_p: float, rho_n: float, initi
         args = list(x) + [params[s.name] for s in param_symbols] + [rho_s, rho_B, rho_3, rho_s3]
         return np.array([fn(*args) for fn in eom_funcs], float)
 
-    sol = fsolve(residual, np.array(initial_guess, float), xtol=1e-10, maxfev=20000)
+    def masses(x):
+        subs = {symbol: float(value) for symbol, value in zip(field_symbols, x)}
+        subs.update({symbol: params[symbol.name] for symbol in param_symbols})
+        m0 = float(sp.N(analytic_model.effective_mass_expr.subs(subs)))
+        m3 = float(sp.N(analytic_model.isovector_scalar_mass_expr.subs(subs)))
+        return m0 + m3, m0 - m3
+
+    sol, _diagnostics = checked_field_solve(
+        residual, initial_guess, field_names, rho_p + rho_n, masses)
     return {name: float(val) for name, val in zip(field_names, sol)}
 
 

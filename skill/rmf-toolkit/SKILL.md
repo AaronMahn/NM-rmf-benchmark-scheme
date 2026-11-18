@@ -114,16 +114,24 @@ models is generally NOT the saturation point (pressure P != 0 there). Prefer the
 - Symmetry energy: E_sym = (1/2) d^2(E/A)/ddelta^2 at delta=0, asymmetry delta=(rho_n-rho_p)/rho;
   a delta ≈ 0.02 second difference is adequate.
 
-## Field-equation solving — guard against spurious branches
+## Field-equation solving — verify convergence and identify the branch
 
-The mean-field equations can have MULTIPLE roots. The trivial branch (sigma≈0, omega≈0,
-m*/m_N≈0) is UNPHYSICAL. When solving with a root finder:
-- Seed from a physical guess (sigma giving m*/m_N ≈ 0.6-0.8); at each density warm-start from the
-  previous density's converged fields.
-- Reject any solution with m*/m_N outside ~[0.4, 0.95], or with the wrong sign of the scalar
-  density; retry from a different seed.
-- If a physical root will not stabilize, record best-effort fields and move on — do not spend the
-  whole time budget on one density.
+Use `NMtoolsV1/solver_checks.py` for field roots. It checks the solver status, finite fields,
+positive finite proton/neutron effective masses, and
+`max(abs(EOM)) / max((197.327**3) * rho_B, 1) <= 1e-8`. An `ier=1` flag alone is insufficient.
+The helper retries explicit seeds and a scaled least-squares solve, then raises
+`FieldConvergenceError` if no candidate passes. Propagate that failure into the output status;
+do not turn a failed density into a successful six-vector or silently omit it from the EOS.
+
+Warm-start from the previous verified density when appropriate. Beta equilibrium additionally
+requires a final chemical-potential residual no larger than `1e-6 MeV`; a sign change across
+a discontinuous field branch does not establish a root. The compiler derives vector chemical
+potentials from the supplied symbolic energy, so coupling names need not match a baseline model.
+
+Multiple verified roots can still exist. The helper returns the first verified root under its
+documented seed order; it does not prove a global energy minimum or a physically stable phase.
+Do not impose a universal effective-mass fraction window on synthetic random-coupling models.
+Record branch assumptions, nonmonotonic cores, instability and extrapolation limits separately.
 
 
 ## Practical cautions
@@ -164,6 +172,30 @@ Key bundled modules include:
 - `scripts/agentV1-tools/TOVtools/tool_beta_eff.py`
 
 Treat these as the concrete implementation snapshot that goes with the skill guidance. Read them when you need the actual code paths rather than only the architectural notes.
+
+## Released model and scoring scripts
+
+- `scripts/agentV1-tools/model_io.py` loads a JSON model definition and builds the analytic,
+  numeric, and beta-equilibrium model in one call. The schema and expression conventions are
+  documented in `references/model_format.md`.
+- `scripts/run_model.py --model models/tm1_paper.json --out results/tm1` runs nuclear
+  properties, beta EOS, crust-core matching, and the M-R curve.
+- `scripts/bja_score.py --list-constraints` lists the catalogue; use `--model`,
+  `--constraints`, and optional `--out` to score a model. The Mmax >= 2.08 Msun term is a
+  one-sided lower-bound penalty with sigma 0.07 Msun. `m_sigma = 600 +/- 200 MeV` is a
+  parameter prior, not an observable constraint.
+- `scripts/fit_model.py` optimizes explicitly selected couplings with user-supplied bounds.
+  Run `--help` for required options; fitting is not run implicitly by the scoring command.
+- `scripts/run_paper_model.py` extracts a model from a local PDF or arXiv paper and compares
+  the computed outputs with reported values. It requires the optional extraction dependencies
+  and `ANTHROPIC_API_KEY` in the environment. It makes a paid Anthropic API call only when the
+  user explicitly runs extraction; tests use a mocked client.
+
+`paper/validation_walecka/run.sh` reproduces the Table 2 examples.
+`paper/sigma6_tm1/fit_run.py --evaluate-only` recomputes the Table 3 Gaussian results
+at the released sigma6 and sigma6+c4 couplings. `paper/referee_validation/README.md`
+documents the Appendix D joint NICER fits and posterior sampling. `harness/gt/` contains
+the M-R target regeneration workflow. See `docs/REPRODUCTION.md` for the released values.
 
 ## Neutron-star M–R: REQUIRED crust handling
 

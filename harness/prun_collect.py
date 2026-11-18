@@ -1,8 +1,9 @@
 import sys, os, json, glob
 from pathlib import Path
 import numpy as np
+from runtime_config import OPENCLAW_HOME
 # ROOT = host benchmark root (cells, session stores, output bundles live here)
-ROOT=os.environ.get("P26_ROOT",os.path.expanduser("~/P26exp")); HOME=os.path.expanduser("~")
+ROOT=os.environ.get("P26_ROOT",os.path.expanduser("~/P26exp"))
 # REPO = this repository (the canonical ground truth is a repo artifact, not host runtime)
 REPO=Path(os.environ.get("P26_REPO", Path(__file__).resolve().parent.parent))
 GT=np.load(str(REPO/"data"/"gt"/"targets_100x6.npy"))
@@ -12,7 +13,7 @@ man=json.load(open(MAN))
 models=sys.argv[1].split(",") if len(sys.argv)>1 else list(man)
 
 def recover_tokens(agent,sid):
-    jf=glob.glob(f"{HOME}/.openclaw/agents/{agent}/sessions/{sid}.jsonl")
+    jf=glob.glob(str(OPENCLAW_HOME / "agents" / agent / "sessions" / f"{sid}.jsonl"))
     if not jf: return None
     tot=0
     def walk(x):

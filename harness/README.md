@@ -6,8 +6,8 @@ repository — it isn't needed to run or score the benchmark.)
 
 Most of these orchestrate agents and so assume the run environment: an `openclaw` agent root
 (`P26_ROOT`, default `~/P26exp`) and per-agent workspaces/session stores under
-`~/.openclaw/agents/`. The scorer (`aggregate_parallel.py`) is self-contained and runs anywhere
-from a clone.
+`$OPENCLAW_HOME/agents/`. `OPENCLAW_HOME` is configurable; adapt it to your platform. The scorer
+(`aggregate_parallel.py`) is self-contained and runs anywhere from a clone.
 
 ## Pipeline (paired, parallel) — per model
 

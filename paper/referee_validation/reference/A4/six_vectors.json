@@ -1,0 +1,224 @@
+{
+ "columns": [
+  "binding_energy_MeV",
+  "pressure_MeV_fm3",
+  "compressibility_MeV",
+  "symmetry_energy_MeV",
+  "M_msun",
+  "R_km"
+ ],
+ "conventions": {
+  "rho_NM": 0.16,
+  "rho_c": 4.0,
+  "E_over_A": "eps/rho - M0 (vacuum mass, 938.98-939.00 MeV)",
+  "K": "9 (2 rho dE/drho + rho^2 d2E/drho2) = 9 dP/drho, released FD h=1e-4",
+  "Esym": "released FD in delta, h=1e-3",
+  "matter": "n p e (m_e = 0.511 MeV), no muons",
+  "crust": "bundled bps.dat below 0.08 fm^-3, core at/above (hybrid_eos)",
+  "tov": "RK4 dr=0.005 km, p_surface=1e-12",
+  "central_pressure": "np.interp of beta-equilibrium P on the 0.02 fm^-3 core grid"
+ },
+ "vectors": {
+  "eNJL1": {
+   "binding_energy_MeV": -16.291204812142382,
+   "pressure_MeV_fm3": 0.3171315374274286,
+   "compressibility_MeV": 341.55840655203457,
+   "symmetry_energy_MeV": 35.72732248358079,
+   "M_msun": 1.9362276249864279,
+   "R_km": 9.750001000000125,
+   "M_formal": 1.9362276249864279,
+   "R_formal": 9.750001000000125,
+   "MR_status": "formal (convention value, outside model validity)",
+   "hard_failures": [],
+   "caveats": [
+    "rho_c = 4.0 is past M_max (rho_c,max = 0.776); unstable branch",
+    "k_F,n > Lambda from 0.32 fm^-3 (beyond cutoff)",
+    "gap root no longer the Hartree minimum from 0.50 fm^-3"
+   ]
+  },
+  "eNJL1wr1": {
+   "binding_energy_MeV": -16.291204812142382,
+   "pressure_MeV_fm3": 0.3171314364053046,
+   "compressibility_MeV": 341.55840655203457,
+   "symmetry_energy_MeV": 35.234794495409005,
+   "M_msun": NaN,
+   "R_km": NaN,
+   "M_formal": null,
+   "R_formal": null,
+   "MR_status": "invalid",
+   "hard_failures": [
+    "dP/drho <= 0 from 0.92 fm^-3 (mechanically unstable; no TOV star with rho_c above 0.92)",
+    "acausal (c_s^2 > 1) from 1.790 fm^-3",
+    "E_sym collapse: y_p = 0 (pure neutron matter) from 1.16 fm^-3"
+   ],
+   "caveats": [
+    "rho_c = 4.0 is past M_max (rho_c,max = 0.797); unstable branch",
+    "k_F,n > Lambda from 0.30 fm^-3 (beyond cutoff)",
+    "gap root no longer the Hartree minimum from 0.50 fm^-3"
+   ]
+  },
+  "eNJL1wr2": {
+   "binding_energy_MeV": -16.291204812142382,
+   "pressure_MeV_fm3": 0.3171309312492099,
+   "compressibility_MeV": 341.55840655203457,
+   "symmetry_energy_MeV": 32.77215364505537,
+   "M_msun": NaN,
+   "R_km": NaN,
+   "M_formal": null,
+   "R_formal": null,
+   "MR_status": "invalid",
+   "hard_failures": [
+    "dP/drho <= 0 from 0.36 fm^-3 (mechanically unstable; no TOV star with rho_c above 0.36)",
+    "M(rho_c) still rising at the top of the usable core: M_max not reached",
+    "acausal (c_s^2 > 1) from 0.790 fm^-3",
+    "E_sym collapse: y_p = 0 (pure neutron matter) from 0.56 fm^-3"
+   ],
+   "caveats": [
+    "rho_c = 4.0 is past M_max (rho_c,max = 0.360); unstable branch",
+    "k_F,n > Lambda from 0.28 fm^-3 (beyond cutoff)",
+    "gap root no longer the Hartree minimum from 0.44 fm^-3"
+   ]
+  },
+  "eNJL2": {
+   "binding_energy_MeV": -15.620575542681422,
+   "pressure_MeV_fm3": 0.06198703130655758,
+   "compressibility_MeV": 308.1934187866872,
+   "symmetry_energy_MeV": 35.57860998171236,
+   "M_msun": 1.796033097394441,
+   "R_km": 9.070001000000019,
+   "M_formal": 1.796033097394441,
+   "R_formal": 9.070001000000019,
+   "MR_status": "formal (convention value, outside model validity)",
+   "hard_failures": [],
+   "caveats": [
+    "rho_c = 4.0 is past M_max (rho_c,max = 0.917); unstable branch",
+    "k_F,n > Lambda from 0.42 fm^-3 (beyond cutoff)",
+    "gap root no longer the Hartree minimum from 0.66 fm^-3"
+   ]
+  },
+  "eNJL2wr1": {
+   "binding_energy_MeV": -15.620575542681422,
+   "pressure_MeV_fm3": 0.06198693028443358,
+   "compressibility_MeV": 308.1934187866872,
+   "symmetry_energy_MeV": 35.08608165248006,
+   "M_msun": NaN,
+   "R_km": NaN,
+   "M_formal": null,
+   "R_formal": null,
+   "MR_status": "invalid",
+   "hard_failures": [
+    "dP/drho <= 0 from 0.90 fm^-3 (mechanically unstable; no TOV star with rho_c above 0.90)",
+    "M(rho_c) still rising at the top of the usable core: M_max not reached",
+    "acausal (c_s^2 > 1) from 1.670 fm^-3",
+    "E_sym collapse: y_p = 0 (pure neutron matter) from 1.16 fm^-3"
+   ],
+   "caveats": [
+    "rho_c = 4.0 is past M_max (rho_c,max = 0.900); unstable branch",
+    "k_F,n > Lambda from 0.40 fm^-3 (beyond cutoff)",
+    "gap root no longer the Hartree minimum from 0.64 fm^-3"
+   ]
+  },
+  "eNJL3": {
+   "binding_energy_MeV": -15.794677651483198,
+   "pressure_MeV_fm3": -0.006613440502945878,
+   "compressibility_MeV": 330.5580753789399,
+   "symmetry_energy_MeV": 33.95385692783748,
+   "M_msun": 1.6744288751753464,
+   "R_km": 8.830000999999982,
+   "M_formal": 1.6744288751753464,
+   "R_formal": 8.830000999999982,
+   "MR_status": "formal (convention value, outside model validity)",
+   "hard_failures": [],
+   "caveats": [
+    "rho_c = 4.0 is past M_max (rho_c,max = 0.875); unstable branch",
+    "k_F,n > Lambda from 0.90 fm^-3 (beyond cutoff)",
+    "gap root no longer the Hartree minimum from 1.34 fm^-3"
+   ]
+  },
+  "eNJL3sr1": {
+   "binding_energy_MeV": -15.794677651483198,
+   "pressure_MeV_fm3": -0.006613814077894631,
+   "compressibility_MeV": 330.5580753789399,
+   "symmetry_energy_MeV": 31.616967476111313,
+   "M_msun": 1.6486080371586984,
+   "R_km": 8.490000999999928,
+   "M_formal": 1.6486080371586984,
+   "R_formal": 8.490000999999928,
+   "MR_status": "formal (convention value, outside model validity)",
+   "hard_failures": [],
+   "caveats": [
+    "rho_c = 4.0 is past M_max (rho_c,max = 0.965); unstable branch",
+    "k_F,n > Lambda from 0.74 fm^-3 (beyond cutoff)",
+    "gap root no longer the Hartree minimum from 1.28 fm^-3"
+   ]
+  },
+  "eNJL1m": {
+   "binding_energy_MeV": -16.157516077059768,
+   "pressure_MeV_fm3": -0.022039794004115265,
+   "compressibility_MeV": 319.46914241925674,
+   "symmetry_energy_MeV": 34.78095345599286,
+   "M_msun": 1.4320314918578823,
+   "R_km": 8.075000999999864,
+   "M_formal": 1.4320314918578823,
+   "R_formal": 8.075000999999864,
+   "MR_status": "formal (convention value, outside model validity)",
+   "hard_failures": [],
+   "caveats": [
+    "rho_c = 4.0 is past M_max (rho_c,max = 0.872); unstable branch",
+    "k_F,n > Lambda from 0.60 fm^-3 (beyond cutoff)",
+    "gap root no longer the Hartree minimum from 0.92 fm^-3"
+   ]
+  },
+  "eNJL1msr1": {
+   "binding_energy_MeV": -16.157516077059768,
+   "pressure_MeV_fm3": -0.022040255504464312,
+   "compressibility_MeV": 319.46914241925674,
+   "symmetry_energy_MeV": 31.863951676314173,
+   "M_msun": 1.4128138029928756,
+   "R_km": 7.645000999999859,
+   "M_formal": 1.4128138029928756,
+   "R_formal": 7.645000999999859,
+   "MR_status": "formal (convention value, outside model validity)",
+   "hard_failures": [],
+   "caveats": [
+    "rho_c = 4.0 is past M_max (rho_c,max = 1.008); unstable branch",
+    "k_F,n > Lambda from 0.52 fm^-3 (beyond cutoff)",
+    "gap root no longer the Hartree minimum from 0.82 fm^-3"
+   ]
+  },
+  "eNJL2m": {
+   "binding_energy_MeV": -16.216276485518847,
+   "pressure_MeV_fm3": 0.25414441304678803,
+   "compressibility_MeV": 384.8056948716507,
+   "symmetry_energy_MeV": 36.060702427676006,
+   "M_msun": 1.5172385864638365,
+   "R_km": 8.765000999999971,
+   "M_formal": 1.5172385864638365,
+   "R_formal": 8.765000999999971,
+   "MR_status": "formal (convention value, outside model validity)",
+   "hard_failures": [],
+   "caveats": [
+    "rho_c = 4.0 is past M_max (rho_c,max = 0.844); unstable branch",
+    "k_F,n > Lambda from 0.72 fm^-3 (beyond cutoff)",
+    "gap root no longer the Hartree minimum from 1.08 fm^-3"
+   ]
+  },
+  "eNJL2msr1": {
+   "binding_energy_MeV": -16.216276485518847,
+   "pressure_MeV_fm3": 0.2541438730115715,
+   "compressibility_MeV": 384.8056948716507,
+   "symmetry_energy_MeV": 32.669689744579955,
+   "M_msun": 1.4533924797248647,
+   "R_km": 8.080000999999864,
+   "M_formal": 1.4533924797248647,
+   "R_formal": 8.080000999999864,
+   "MR_status": "formal (convention value, outside model validity)",
+   "hard_failures": [],
+   "caveats": [
+    "rho_c = 4.0 is past M_max (rho_c,max = 0.987); unstable branch",
+    "k_F,n > Lambda from 0.60 fm^-3 (beyond cutoff)",
+    "gap root no longer the Hartree minimum from 0.92 fm^-3"
+   ]
+  }
+ }
+}

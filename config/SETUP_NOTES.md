@@ -8,7 +8,9 @@ a separate archive outside this repository.
 
 - An agent host running the `openclaw` agent framework (`openclaw` CLI on `PATH`).
 - Benchmark root `P26_ROOT` (default `~/P26exp`): holds `tasks/`, per-agent workspaces `ws/<id>/`,
-  and `results/cells/<agent>/`. Agent config + session stores live under `~/.openclaw/agents/<id>/`.
+  and `results/cells/<agent>/`. Agent config + session stores live under
+  `$OPENCLAW_HOME/agents/<id>/`; set `OPENCLAW_HOME` for your platform, or use the shared
+  harness default.
 - Runs are kept alive across disconnects with `screen` + `caffeinate`. The repo's `data/` and
   `skill/` are the canonical task prompts, ground truth, and skill.
 
@@ -24,7 +26,8 @@ a separate archive outside this repository.
 | kimi | `moonshot/kimi-k2.6` | Moonshot (native) | `https://api.moonshot.cn/v1` |
 
 `gpt-5.4` (`openrouter/openai/gpt-5.4`) was tested earlier but **excluded** from the final
-parallel run. Each provider's key lives in the agent's `~/.openclaw/agents/<id>/agent/auth-profiles.json`
+parallel run. Each provider's key lives in the agent's
+`$OPENCLAW_HOME/agents/<id>/agent/auth-profiles.json`
 (and inline in `models.json`); the model binding in `openclaw.json` is the source of truth — the
 runner passes no `--model` flag.
 

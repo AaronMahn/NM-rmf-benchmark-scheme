@@ -1,13 +1,6 @@
-TODO: choose and confirm a license before publishing.
-
-A permissive license (e.g. MIT) is a common choice for benchmark/research code.
-If MIT is intended, fill in the year and copyright holder and replace this file
-with the standard MIT text:
-
-------------------------------------------------------------------------------
 MIT License
 
-Copyright (c) <YEAR> <COPYRIGHT HOLDER>
+Copyright (c) 2026 Yao Ma, Yong-Liang Ma, and Jia-Ying Xiong
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-------------------------------------------------------------------------------
-
-Note: `skill/rmf-toolkit/scripts/agentV1-tools/` and `data/gt/` may derive from
-prior code/data — confirm their licensing/attribution before release.

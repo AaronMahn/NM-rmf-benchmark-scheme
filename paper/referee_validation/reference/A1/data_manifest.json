@@ -1,0 +1,30 @@
+[
+  {
+    "source": "J0740",
+    "doi": "10.5281/zenodo.10519473",
+    "archive": "mr_samples_and_contours.tar.gz",
+    "archive_md5": "md5:ca8e70eeca81feb71321f1a88a24f2f9",
+    "member": "mr_samples_and_contours/J0740_gamma_NxX_lp40k_se001_mrsamples_post_equal_weights.dat",
+    "n_samples": 379669,
+    "samples_sha256": "862a6dc14e0c1704bb2220a045a0fcb45b6ac0131b71d5f7a964e9d5faa25ed9"
+  },
+  {
+    "source": "J0437",
+    "doi": "10.5281/zenodo.13766753",
+    "archive": "headline_result_samples_and_contours.tar.gz",
+    "archive_md5": "md5:d015dc7c5782b770b2d08972f9e7692c",
+    "member": "headline_result_samples_and_contours/samples/J0437_3C50_BKG_AGN_hiMN_lowXPSI_mrsamples_post_equal_weights.dat",
+    "n_samples": 218553,
+    "samples_sha256": "9f2b65bf4a6b954cdc79a51e611dbc96e77fc66a5c648db07d53068547b7fc96"
+  },
+  {
+    "source": "J0030",
+    "doi": "10.5281/zenodo.8239000",
+    "archive": "updated_analyses_PSRJ0030_up_to_2018_NICER_data.tar.gz",
+    "member": "updated_analyses_PSRJ0030_up_to_2018_NICER_data/PDT_U/NICERxXMM/PDTU_LR_1klp_et0p1_se0p8/PDTU_outputs/run1/pdtu_NICERxXMM_preliminary_run1_nlive1k_eff0p8_et0p1_MMoff_noIS_tol-1post_equal_weights.dat",
+    "n_samples": 12832,
+    "member_sha256": "0204feb74c11f0349262c432728f242b52954e283fd649e22365523f964cd9b7",
+    "note": "Streamed to headline member; full 6.9GB archive checksum not checked.",
+    "samples_sha256": "dc3661f323de29c020f68c0c30487f64d6add11cd33c4b4ba353f32b45660e3c"
+  }
+]

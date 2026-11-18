@@ -20,3 +20,8 @@ config/openclaw_config_snapshot.json.real
 # scratch run logs
 *.run.log
 *.prunlog
+harness/gt/targets_100x6.recal.npy
+harness/gt/recalibration_run_report.json
+harness/gt/SUMMARY_recal.md
+paper/validation_walecka/results/
+paper/sigma6_tm1/evaluation_result.json

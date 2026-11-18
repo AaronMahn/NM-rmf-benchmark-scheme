@@ -1,0 +1,174 @@
+{
+  "sets": {
+    "standard_nm": [
+      "rho0",
+      "BE",
+      "K",
+      "Esym",
+      "L"
+    ],
+    "standard_nm_ns": [
+      "rho0",
+      "BE",
+      "K",
+      "Esym",
+      "L",
+      "Mmax",
+      "Mmax235",
+      "R14",
+      "R208"
+    ],
+    "paper_sigma6_tm1": [
+      "n0",
+      "E",
+      "K_sigma6",
+      "Esym_sigma6",
+      "L_sigma6",
+      "m_sigma",
+      "Mmax",
+      "R14_sigma6"
+    ]
+  },
+  "evaluation": {
+    "standard_nm_ns": {
+      "rho_beta_step": 0.005,
+      "mr_sample_stride": 70,
+      "tov_dr_km": 0.005
+    },
+    "paper_sigma6_tm1": {
+      "rho_beta_step": 0.005,
+      "mr_sample_stride": 70,
+      "tov_dr_km": 0.005
+    }
+  },
+  "constraints": {
+    "rho0": {
+      "quantity": "rho0",
+      "central_value": 0.155,
+      "sigma": 0.005,
+      "unit": "fm^-3",
+      "type": "gaussian_observable",
+      "source_reference": "dUTRA_2014"
+    },
+    "BE": {
+      "quantity": "BE",
+      "central_value": -16.0,
+      "sigma": 0.5,
+      "unit": "MeV",
+      "type": "gaussian_observable",
+      "source_reference": "saturation_binding_energy"
+    },
+    "K": {
+      "quantity": "K",
+      "central_value": 230.0,
+      "sigma": 20.0,
+      "unit": "MeV",
+      "type": "gaussian_observable",
+      "source_reference": "dUTRA_2014_ISGMR"
+    },
+    "Esym": {
+      "quantity": "Esym",
+      "central_value": 32.0,
+      "sigma": 2.0,
+      "unit": "MeV",
+      "type": "gaussian_observable",
+      "source_reference": "LI_HAN_2013"
+    },
+    "L": {
+      "quantity": "L",
+      "central_value": 58.0,
+      "sigma": 18.0,
+      "unit": "MeV",
+      "type": "gaussian_observable",
+      "source_reference": "OERTEL_2017"
+    },
+    "Mmax": {
+      "quantity": "Mmax",
+      "central_value": 2.08,
+      "sigma": 0.07,
+      "unit": "Msun",
+      "type": "one_sided_lower_bound",
+      "source_reference": "FONSECA_2021_J0740"
+    },
+    "Mmax235": {
+      "quantity": "Mmax",
+      "central_value": 2.35,
+      "sigma": 0.17,
+      "unit": "Msun",
+      "type": "one_sided_lower_bound",
+      "source_reference": "ROMANI_2022_J0952"
+    },
+    "R14": {
+      "quantity": "R14",
+      "central_value": 12.5,
+      "sigma": 1.0,
+      "unit": "km",
+      "type": "gaussian_observable",
+      "source_reference": "NICER_J0030_2019"
+    },
+    "R208": {
+      "quantity": "R208",
+      "central_value": 12.9,
+      "sigma": 1.5,
+      "unit": "km",
+      "type": "gaussian_observable",
+      "source_reference": "NICER_J0740_2024"
+    },
+    "n0": {
+      "quantity": "rho0",
+      "central_value": 0.16,
+      "sigma": 0.05,
+      "unit": "fm^-3",
+      "type": "gaussian_observable",
+      "source_reference": "sigma6_TM1_fit_run_TGT"
+    },
+    "E": {
+      "quantity": "BE",
+      "central_value": -16.0,
+      "sigma": 1.0,
+      "unit": "MeV",
+      "type": "gaussian_observable",
+      "source_reference": "sigma6_TM1_fit_run_TGT"
+    },
+    "K_sigma6": {
+      "quantity": "K",
+      "central_value": 230.0,
+      "sigma": 30.0,
+      "unit": "MeV",
+      "type": "gaussian_observable",
+      "source_reference": "sigma6_TM1_fit_run_TGT"
+    },
+    "Esym_sigma6": {
+      "quantity": "Esym",
+      "central_value": 30.9,
+      "sigma": 1.9,
+      "unit": "MeV",
+      "type": "gaussian_observable",
+      "source_reference": "sigma6_TM1_fit_run_TGT"
+    },
+    "L_sigma6": {
+      "quantity": "L",
+      "central_value": 52.5,
+      "sigma": 17.5,
+      "unit": "MeV",
+      "type": "gaussian_observable",
+      "source_reference": "sigma6_TM1_fit_run_TGT"
+    },
+    "m_sigma": {
+      "quantity": "m_sigma",
+      "central_value": 600.0,
+      "sigma": 200.0,
+      "unit": "MeV",
+      "type": "parameter_prior",
+      "source_reference": "sigma6_TM1_fit_run_TGT_prior"
+    },
+    "R14_sigma6": {
+      "quantity": "R14",
+      "central_value": 12.7,
+      "sigma": 1.1,
+      "unit": "km",
+      "type": "gaussian_observable",
+      "source_reference": "sigma6_TM1_fit_run_TGT"
+    }
+  }
+}
