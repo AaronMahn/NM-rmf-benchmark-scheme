@@ -1,0 +1,63 @@
+{
+  "model_name": "TM1",
+  "description": "TM1 from arXiv:2603.01933 Table II (paper convention; g_sigma sign-flipped for positive-s solver).",
+  "param_keys": [
+    "P['m_N']",
+    "P['m_sigma']",
+    "P['m_omega']",
+    "P['m_rho']",
+    "P['g_sigma']",
+    "P['g_omega']",
+    "P['g_rho']",
+    "P['g2']",
+    "P['g3']",
+    "P['c3']",
+    "P['g_s6']"
+  ],
+  "field_names": [
+    "s",
+    "o",
+    "r"
+  ],
+  "extra_symbol_names": [
+    "psibar_i_dslash_psi",
+    "psibar_psi",
+    "psibar_gamma0_psi",
+    "psibar_gamma0_tau3_psi",
+    "psibar_tau3_psi"
+  ],
+  "lagrangian_terms": [
+    "sp.Integer(1) * psibar_i_dslash_psi - P['m_N'] * psibar_psi",
+    "-sp.Rational(1,2) * P['m_sigma']**2 * s**2",
+    "-sp.Rational(1,3) * P['g2'] * s**3",
+    "-sp.Rational(1,4) * P['g3'] * s**4",
+    "-sp.Rational(1,6) * P['g_s6'] * s**6",
+    "+sp.Rational(1,2) * P['m_omega']**2 * o**2",
+    "+sp.Rational(1,4) * P['c3'] * o**4",
+    "+sp.Rational(1,2) * P['m_rho']**2 * r**2",
+    "-P['g_sigma'] * s * psibar_psi",
+    "-P['g_omega'] * o * psibar_gamma0_psi",
+    "-P['g_rho'] * r * psibar_gamma0_tau3_psi"
+  ],
+  "params": {
+    "m_N": 939.0,
+    "m_sigma": 511.0,
+    "m_omega": 783.0,
+    "m_rho": 770.0,
+    "g_sigma": -10.0,
+    "g_omega": 12.6,
+    "g_rho": 4.63,
+    "g2": 1420.0,
+    "g3": 0.61,
+    "c3": 71.3,
+    "g_s6": 0.0
+  },
+  "initial_field_guess": [
+    20.0,
+    15.0,
+    0.0
+  ],
+  "rho_beta_min": 0.08,
+  "rho_beta_max": 1.2,
+  "rho_beta_step": 0.001
+}

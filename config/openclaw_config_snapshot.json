@@ -1,5 +1,5 @@
 {
-  "_comment": "Sanitized snapshot of the openclaw setup for the final RMF skill benchmark (parallel pipeline). API KEYS ARE NOT INCLUDED (they live per-agent in ~/.openclaw/agents/<id>/agent/auth-profiles.json). Host identifiers are generic; benchmark root = $P26_ROOT (default ~/P26exp). An earlier 2026-06-17 snapshot is archived separately, outside this repository.",
+  "_comment": "Sanitized snapshot of the openclaw setup for the final RMF skill benchmark (parallel pipeline). API KEYS ARE NOT INCLUDED (they live per-agent under $OPENCLAW_HOME/agents/<id>/agent/auth-profiles.json). Host identifiers are generic; benchmark root = $P26_ROOT (default ~/P26exp). An earlier 2026-06-17 snapshot is archived separately, outside this repository.",
   "providers": {
     "openrouter": {"baseUrl": "https://openrouter.ai/api/v1", "api": "openai-completions"},
     "deepseek":   {"baseUrl": "https://api.deepseek.com/v1", "api": "openai-completions"},
@@ -20,7 +20,7 @@
     "base_agents": "<model>_w / <model>_wo  (workspace ws/<model>_w has skills/rmf-toolkit/; ws/<model>_wo has none)",
     "per_sample_clones": "clone_agents.py creates <model>_w0..2 and <model>_wo0..2, each with its own workspace copy, for true parallel runs",
     "binding": "openclaw.json agents[].model is the source of truth (runner passes no --model flag)",
-    "config_files": "~/.openclaw/agents/<id>/agent/{models.json, auth-profiles.json, sessions/}"
+    "config_files": "$OPENCLAW_HOME/agents/<id>/agent/{models.json, auth-profiles.json, sessions/}"
   },
   "run_mode": {
     "embedded": "openclaw agent --local (run_cell_local.py) to avoid single-gateway contention; tokens recovered from the session .jsonl",

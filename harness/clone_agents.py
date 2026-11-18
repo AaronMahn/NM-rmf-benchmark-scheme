@@ -1,11 +1,11 @@
 import json, os, shutil, subprocess, time
-HOME=os.path.expanduser("~")
-OC=f"{HOME}/.openclaw/openclaw.json"
+from runtime_config import OPENCLAW_HOME, OPENCLAW_WORKSPACE_DIR
+OC=OPENCLAW_HOME / "openclaw.json"
 ROOT=os.environ.get("P26_ROOT",os.path.expanduser("~/P26exp"))
 MODELS=["gpt55","claude","gemini","qwen","deepseek","kimi"]
-KEEP={"AGENTS.md","BOOTSTRAP.md","HEARTBEAT.md","IDENTITY.md","SOUL.md","TOOLS.md","USER.md","MEMORY.md","skills",".openclaw","memory",".git"}
+KEEP={"AGENTS.md","BOOTSTRAP.md","HEARTBEAT.md","IDENTITY.md","SOUL.md","TOOLS.md","USER.md","MEMORY.md","skills",OPENCLAW_WORKSPACE_DIR,"memory",".git"}
 
-shutil.copy(OC, OC+".preclone.bak")
+shutil.copy(OC, str(OC)+".preclone.bak")
 d=json.load(open(OC))
 ags=d.get("agents"); defs=ags if isinstance(ags,list) else next((v for v in ags.values() if isinstance(v,list)),[])
 byid={a["id"]:a for a in defs if isinstance(a,dict)}
@@ -15,9 +15,9 @@ for m in MODELS:
         base=f"{m}_{cond}"; b=byid[base]
         for i in (0,1,2):
             nid=f"{m}_{cond}{i}"
-            nws=f"{ROOT}/ws/{nid}"; nad=f"{HOME}/.openclaw/agents/{nid}/agent"
+            nws=f"{ROOT}/ws/{nid}";             nad=OPENCLAW_HOME / "agents" / nid / "agent"
             # agentDir (config + keys)
-            os.makedirs(f"{HOME}/.openclaw/agents/{nid}/sessions", exist_ok=True)
+            (OPENCLAW_HOME / "agents" / nid / "sessions").mkdir(parents=True, exist_ok=True)
             if os.path.isdir(nad): shutil.rmtree(nad)
             shutil.copytree(b["agentDir"], nad)
             # workspace copy (incl skills for _w)
@@ -27,7 +27,7 @@ for m in MODELS:
             for item in os.listdir(nws):
                 if item not in KEEP:
                     p=os.path.join(nws,item); shutil.rmtree(p) if os.path.isdir(p) else os.remove(p)
-            entry={"id":nid,"name":nid,"workspace":nws,"agentDir":nad,"model":b["model"]}
+            entry={"id":nid,"name":nid,"workspace":nws,"agentDir":str(nad),"model":b["model"]}
             if nid in byid: byid[nid].update(entry)
             else: defs.append(entry); byid[nid]=entry
             created.append(nid)

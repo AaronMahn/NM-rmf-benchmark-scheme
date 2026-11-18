@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import sys, os, subprocess, json, time, shutil, re
+from runtime_config import OPENCLAW_HOME, OPENCLAW_WORKSPACE_DIR
 try:
     import numpy as np
 except Exception:
@@ -14,9 +15,9 @@ ids = [int(x) for x in ids_csv.split(',') if x != '']
 os.makedirs(cell_dir, exist_ok=True)
 logdir = os.path.join(cell_dir, 'logs'); os.makedirs(logdir, exist_ok=True)
 prog = os.path.join(cell_dir, 'progress.txt')
-env = dict(os.environ); env['PATH'] = '/opt/homebrew/bin:' + env.get('PATH','')
+env = dict(os.environ)
 KEEP = {'AGENTS.md','BOOTSTRAP.md','HEARTBEAT.md','IDENTITY.md','SOUL.md','TOOLS.md',
-        'USER.md','MEMORY.md','skills','.openclaw','memory','.git','out'}
+        'USER.md','MEMORY.md','skills',OPENCLAW_WORKSPACE_DIR,'memory','.git','out'}
 def clean_ws():
     if not ws_dir or not os.path.isdir(ws_dir): return
     for name in os.listdir(ws_dir):
@@ -67,7 +68,7 @@ for n in ids:
     try:
         # clear stale session locks for this agent (a prior force-killed sample can orphan a lock)
         import glob as _glob
-        for _lk in _glob.glob(os.path.expanduser('~/.openclaw/agents/%s/sessions/*.lock' % agent)):
+        for _lk in _glob.glob(str(OPENCLAW_HOME / 'agents' / agent / 'sessions' / '*.lock')):
             try: os.remove(_lk)
             except OSError: pass
         r = subprocess.run(['openclaw','agent','--local','--agent',agent,'--session-id',sid,
@@ -83,7 +84,7 @@ for n in ids:
     if not usage:
         try:
             import glob as _g2
-            jf=_g2.glob(os.path.expanduser('~/.openclaw/agents/%s/sessions/%s.jsonl'%(agent,sid)))
+            jf=_g2.glob(str(OPENCLAW_HOME / 'agents' / agent / 'sessions' / (sid + '.jsonl')))
             tot=0
             def _walk(x):
                 if isinstance(x,dict):

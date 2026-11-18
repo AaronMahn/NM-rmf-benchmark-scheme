@@ -21,13 +21,16 @@ Usage (run inside a screen + caffeinate so it survives disconnect):
 Prereqs: working API key for each requested model's provider (see SETUP_NOTES.md).
 """
 import sys, os, json, subprocess, random, time, glob
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from runtime_config import OPENCLAW_HOME
 
 ROOT     = os.path.expanduser("~/P26exp")
 TIMEOUT  = "600"          # 10 minutes per task
 NSAMPLES = 3
 RUNTAG   = "scheme1"
 MAXCONC  = 3              # max concurrent cells (3 was safe; 10 starved the Mac)
-HOME     = os.path.expanduser("~")
 
 MODELS = {
     "gpt55":    "openrouter/openai/gpt-5.5",
@@ -53,8 +56,8 @@ def pick_samples(model, manifest):
 
 
 def hygiene(agent):
-    sd = f"{HOME}/.openclaw/agents/{agent}/sessions"
-    for f in glob.glob(sd + "/*.jsonl") + glob.glob(sd + "/*.lock") + glob.glob(sd + "/sessions.json"):
+    sd = OPENCLAW_HOME / "agents" / agent / "sessions"
+    for f in glob.glob(str(sd / "*.jsonl")) + glob.glob(str(sd / "*.lock")) + [str(sd / "sessions.json")]:
         try:
             os.remove(f)
         except OSError:
@@ -67,7 +70,7 @@ def launch(agent, ids, model):
     ids_csv = ",".join(str(i) for i in ids)
     log  = f"{ROOT}/results/cells/{agent}.{RUNTAG}log"
     hygiene(agent)
-    env = dict(os.environ); env["PATH"] = "/opt/homebrew/bin:" + env.get("PATH", "")
+    env = dict(os.environ)
     lf = open(log, "w")
     return subprocess.Popen(
         ["python3", f"{ROOT}/run_cell.py", agent, cell, f"{ROOT}/tasks",
@@ -81,7 +84,7 @@ def main():
     for m in models:
         assert m in MODELS, f"unknown model '{m}' (known: {list(MODELS)})"
 
-    env = dict(os.environ); env["PATH"] = "/opt/homebrew/bin:" + env.get("PATH", "")
+    env = dict(os.environ)
     # benchmark integrity: session-memory hook OFF
     subprocess.run(["openclaw", "hooks", "disable", "session-memory"], env=env)
 

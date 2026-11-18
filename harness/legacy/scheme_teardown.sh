@@ -14,16 +14,24 @@
 #   4. clears per-cell workspace scratch (keeps skills/ and identity files)
 #   5. removes the native 'deepseek' provider + deepseek API keys, and reverts the
 #      deepseek_w/deepseek_wo model bindings back to OpenRouter
-#      (backs up ~/.openclaw/openclaw.json first)
+#      (backs up the configured openclaw.json first)
 #   6. re-enables the session-memory hook (restore default)
 #
 # What it KEEPS: the harness scripts (run_cell.py etc.), the rmf-toolkit skill,
 # tasks/, gt/ — those are the reusable scaffolding (also saved locally).
 # =============================================================================
 set -u
-export PATH=/opt/homebrew/bin:$PATH
 ROOT="${P26_ROOT:-$HOME/P26exp}"
-OC=$HOME/.openclaw/openclaw.json
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+REPO_ROOT="${P26_REPO:-$(CDPATH= cd -- "$SCRIPT_DIR/../.." && pwd)}"
+OPENCLAW_HOME=$(PYTHONPATH="$REPO_ROOT/harness${PYTHONPATH:+:$PYTHONPATH}" \
+ OPENCLAW_HOME="${OPENCLAW_HOME:-}" \
+ python3 -c 'from runtime_config import OPENCLAW_HOME; print(OPENCLAW_HOME)')
+export OPENCLAW_HOME
+OPENCLAW_WORKSPACE_DIR=$(PYTHONPATH="$REPO_ROOT/harness${PYTHONPATH:+:$PYTHONPATH}" \
+ OPENCLAW_HOME="$OPENCLAW_HOME" \
+ python3 -c 'from runtime_config import OPENCLAW_WORKSPACE_DIR; print(OPENCLAW_WORKSPACE_DIR)')
+OC=$OPENCLAW_HOME/openclaw.json
 
 if [ "${1:-}" != "--yes" ]; then
   echo "This is destructive. Re-run with:  bash scheme_teardown.sh --yes"
@@ -39,9 +47,9 @@ sleep 2
 
 echo "[2/6] wiping benchmark agent session stores"
 for a in gpt55_w gpt55_wo claude_w claude_wo gemini_w gemini_wo qwen_w qwen_wo deepseek_w deepseek_wo kimi_w kimi_wo gpt54_w gpt54_wo; do
-  rm -f $HOME/.openclaw/agents/$a/sessions/*.jsonl \
-        $HOME/.openclaw/agents/$a/sessions/*.lock \
-        $HOME/.openclaw/agents/$a/sessions/sessions.json 2>/dev/null
+  rm -f "$OPENCLAW_HOME"/agents/$a/sessions/*.jsonl \
+        "$OPENCLAW_HOME"/agents/$a/sessions/*.lock \
+        "$OPENCLAW_HOME"/agents/$a/sessions/sessions.json 2>/dev/null
 done
 
 echo "[3/6] clearing results"
@@ -50,7 +58,7 @@ rm -f  $ROOT/results/store.jsonl $ROOT/results/scheme_manifest.json \
        $ROOT/results/scheme_*_DONE $ROOT/results/clean_DONE 2>/dev/null
 
 echo "[4/6] clearing per-cell workspace scratch (keep skills/ + identity files)"
-KEEP="AGENTS.md BOOTSTRAP.md HEARTBEAT.md IDENTITY.md SOUL.md TOOLS.md USER.md MEMORY.md skills .openclaw memory .git"
+KEEP="AGENTS.md BOOTSTRAP.md HEARTBEAT.md IDENTITY.md SOUL.md TOOLS.md USER.md MEMORY.md skills $OPENCLAW_WORKSPACE_DIR memory .git"
 for ws in $ROOT/ws/*/; do
   [ -d "$ws" ] || continue
   for item in "$ws"*; do
@@ -76,8 +84,8 @@ print("  openclaw.json: deepseek provider removed; deepseek_w/wo reverted to ope
 PY
 # remove deepseek keys from agent auth-profiles + inline models.json copy
 for a in deepseek_w deepseek_wo; do
-  AP=$HOME/.openclaw/agents/$a/agent/auth-profiles.json
-  MJ=$HOME/.openclaw/agents/$a/agent/models.json
+  AP=$OPENCLAW_HOME/agents/$a/agent/auth-profiles.json
+  MJ=$OPENCLAW_HOME/agents/$a/agent/models.json
   [ -f "$AP" ] && python3 -c "import json;p='$AP';d=json.load(open(p));d.get('profiles',{}).pop('deepseek:default',None);json.dump(d,open(p,'w'),indent=2)"
   [ -f "$MJ" ] && python3 -c "import json;p='$MJ';d=json.load(open(p));d.get('providers',{}).pop('deepseek',None);json.dump(d,open(p,'w'),indent=2)"
 done

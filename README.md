@@ -8,9 +8,8 @@ Each model is run **with** the skill and **without** it, on the same tasks, and 
 against a fixed numerical ground truth. The question: does giving the model the toolkit
 change whether it gets the physics right?
 
-> Research code released alongside the manuscript. The harness was run against a private
-> remote machine using an agent framework (`openclaw`); paths and host identifiers in the
-> scripts reflect that environment and must be adapted to reproduce. See
+> Research code released alongside the manuscript. The harness was run using an agent framework
+> (`openclaw`); configure the host-specific paths for your platform before reproducing. See
 > [`config/SETUP_NOTES.md`](config/SETUP_NOTES.md) and [`harness/README.md`](harness/README.md).
 
 ## The task
@@ -48,16 +47,14 @@ scanning / fitting to empirical numbers.
 - `targets_100x6.npy` — the ground truth, shape `(100, 6)`, column order as above.
 - `targets_100x6_columns.txt` — column labels.
 
-The neutron-star **M and R** columns are recalibrated to the skill's bundled toolkit pipeline,
-so that a faithful skill-follower scores ~0 on M–R; the four matter columns are the original
-forward-computed values. The reason: the toolkit's β-EOS solver was revised after the first
-ground truth was generated — the crust table (`bps.dat`) is byte-identical, but the solver
-revision shifts M and R by a median ~1 % (tail to ~13 %) on the same EOS.
+The neutron-star **M and R** columns are reproduced by the bundled toolkit pipeline. The
+four matter columns are retained unchanged from the original forward-computed targets. The
+inputs and regeneration scripts are in `harness/gt/`; the original shipped target file is
+read-only and is checked to 1e-6 relative precision.
 
 Scoring against the skill's own pipeline measures *adherence*; it is not an independent
-correctness check (see the manuscript). The pre-recalibration ground truth, the scripts that
-produced the recalibration, and the per-sample shift report are kept in a separate archive
-outside this repository.
+correctness check (see the manuscript). The original task sampler and matter-column generator
+are not included yet; the matter-target provenance is documented in `harness/gt/README.md`.
 
 ## Repository layout
 
@@ -69,6 +66,7 @@ benchmark_scheme/
 ├── skill/rmf-toolkit/         ← the skill under test (SKILL.md + scripts/ + bps.dat)
 ├── harness/                   ← runners, collector, scorers (see harness/README.md)
 │   └── legacy/                ← earlier sequential/gateway-era harness (superseded)
+│   └── gt/                    ← M-R ground-truth regeneration and provenance
 ├── data/
 │   ├── tasks/0.txt … 99.txt   ← the 100 task prompts
 │   └── gt/                    ← ground truth (targets_100x6.npy + columns)
@@ -108,6 +106,25 @@ Caveats for the latest run are noted in `SUMMARY_parallel.md` (deepseek/kimi nat
 slow/rate-limited the day it ran).
 
 ## Reproducing
+
+### Scope
+
+The released pipeline supports nucleons with σ, ω, ρ, and δ mean fields; polynomial
+self- and cross-couplings; density-independent couplings; Hartree approximation without
+the Dirac sea; zero temperature; npe beta equilibrium without muons; and a BPS crust joined
+to the core at 0.08 fm⁻³. Density-dependent couplings, NJL contact models with cutoff and
+vacuum terms (including eNJL), relativistic Hartree-Fock, hyperons, quark matter, and finite
+temperature are not supported without new code.
+
+### Reproducing the paper
+
+`paper/validation_walecka/run.sh` runs the three Table 2 models through the released pipeline.
+`paper/sigma6_tm1/fit_run.py --evaluate-only` recomputes the sigma6 and sigma6+c4 Gaussian
+fits for revised Table 3 at the released couplings. The joint NICER fits and posterior
+workflow for Appendix D are documented in [`paper/referee_validation/README.md`](paper/referee_validation/README.md).
+Paper-versus-release numbers are recorded in [`docs/REPRODUCTION.md`](docs/REPRODUCTION.md).
+The M-R target regeneration and comparison with the shipped ground truth are documented
+in [`harness/gt/README.md`](harness/gt/README.md).
 
 This is agent-driven and depends on the `openclaw` agent framework, per-provider API keys, and
 a machine to host the agents; it is not a one-command pipeline. The outline:

@@ -5,7 +5,10 @@ from typing import Callable
 import math
 
 import numpy as np
-from scipy.optimize import brentq, fsolve
+from scipy.optimize import brentq
+from NMtoolsV1.solver_checks import (
+    checked_field_solve, FieldConvergenceError, BETA_RESIDUAL_TOL_MEV,
+)
 
 HBARC = 197.326968
 PI = math.pi
@@ -136,7 +139,9 @@ def solve_beta_equilibrium_point_numeric(
 
     def solve_fields(rho_n: float, rho_p: float, x0):
         fn = lambda xx: compiled_model.eom_numeric(xx, rho_n, rho_p)
-        sol = fsolve(fn, x0, xtol=1e-10, maxfev=20000)
+        sol, _checks = checked_field_solve(
+            fn, x0, field_names, rho_b,
+            lambda xx: (compiled_model.mass_p_numeric(xx), compiled_model.mass_n_numeric(xx)))
         res = compiled_model.eom_numeric(sol, rho_n, rho_p)
         return np.array(sol, dtype=float), np.array(res, dtype=float)
 
@@ -161,8 +166,12 @@ def solve_beta_equilibrium_point_numeric(
         kfn = kf_from_rho_fm3(rho_n)
         o = _field_value(sol, alias_map['omega'])
         r = _field_value(sol, alias_map['rho'])
-        mu_p = math.sqrt(kfp * kfp + mp * mp) + g_omega * o + g_rho * r
-        mu_n = math.sqrt(kfn * kfn + mn * mn) + g_omega * o - g_rho * r
+        chemical = getattr(compiled_model, 'chemical_potentials_numeric', None)
+        if chemical is not None:
+            mu_p, mu_n = chemical(sol, rho_n, rho_p, params)
+        else:  # Backward compatibility for external legacy compiled models.
+            mu_p = math.sqrt(kfp * kfp + mp * mp) + g_omega * o + g_rho * r
+            mu_n = math.sqrt(kfn * kfn + mn * mn) + g_omega * o - g_rho * r
         rho_sp = rho_s_one_species(kfp, mp)
         rho_sn = rho_s_one_species(kfn, mn)
         return {
@@ -218,28 +227,63 @@ def solve_beta_equilibrium_point_numeric(
 
     yp_lo = 1e-8
     yp_hi = 0.5 - 1e-8
-    f_lo, rho_n_lo, rho_p_lo, sol_lo, eom_lo, st_lo, mu_e_lo = beta_residual(yp_lo, field_guess)
-    f_hi, rho_n_hi, rho_p_hi, sol_hi, eom_hi, st_hi, mu_e_hi = beta_residual(yp_hi, sol_lo)
+    valid = []
+    for y in (yp_lo, yp_hi):
+        try:
+            valid.append((y, beta_residual(y, field_guess)))
+        except FieldConvergenceError:
+            pass
+    candidate = None
+    tried = set()
 
-    if f_lo == 0.0:
-        yp, rho_n, rho_p, sol, eom, st, mu_e = yp_lo, rho_n_lo, rho_p_lo, sol_lo, eom_lo, st_lo, mu_e_lo
-    elif f_hi == 0.0:
-        yp, rho_n, rho_p, sol, eom, st, mu_e = yp_hi, rho_n_hi, rho_p_hi, sol_hi, eom_hi, st_hi, mu_e_hi
-    elif f_lo * f_hi > 0.0:
-        samples = []
-        x_guess = field_guess
-        for yp_try in np.linspace(yp_lo, yp_hi, 81):
-            ff, rn, rp, ss, ee, stt, me = beta_residual(float(yp_try), x_guess)
-            x_guess = ss
-            samples.append((abs(ff), float(yp_try), rn, rp, ss, ee, stt, me, ff))
-        _, yp, rho_n, rho_p, sol, eom, st, mu_e, f_mid = min(samples, key=lambda x: x[0])
-        if abs(f_mid) > 1e-4:
-            raise RuntimeError(f'beta equilibrium root not bracketed at rho_b={rho_b}; best residual={f_mid}')
+    def try_brackets(brackets):
+        for lo, hi in sorted(brackets, key=lambda ab: abs((ab[0][0]+ab[1][0])/2-proton_fraction_guess)):
+            interval = (lo[0], hi[0])
+            if interval in tried:
+                continue
+            tried.add(interval)
+            # Freeze a seed for each bracket so residual evaluations do not
+            # depend on the order in which brentq queries proton fractions.
+            seed = lo[1][3]
+            try:
+                y = brentq(lambda v: beta_residual(float(v), seed)[0], lo[0], hi[0],
+                           xtol=min(tol, 1e-12), rtol=min(tol, 1e-12), maxiter=max_iter)
+                state = beta_residual(y, seed)
+                if np.isfinite(state[0]) and abs(state[0]) <= BETA_RESIDUAL_TOL_MEV:
+                    return y, state
+            except (FieldConvergenceError, ValueError, RuntimeError):
+                continue
+        return None
+
+    if len(valid) == 2 and valid[0][1][0] * valid[1][1][0] < 0:
+        candidate = try_brackets([(valid[0], valid[1])])
+    if candidate is None:
+        exact = [v for v in valid if abs(v[1][0]) <= BETA_RESIDUAL_TOL_MEV]
+        if exact:
+            candidate = min(exact, key=lambda v: abs(v[0]-proton_fraction_guess))
+    if candidate is None:
+        sampled, search_seed = [], field_guess
+        for y in np.unique(np.r_[np.linspace(1e-4, 0.5-1e-4, 81), proton_fraction_guess]):
+            try:
+                state = beta_residual(float(y), search_seed)
+                search_seed = state[3]
+                valid.append((float(y), state))
+                sampled.append((float(y), state))
+            except FieldConvergenceError:
+                sampled.append((float(y), None))
+        brackets = [(a, b) for a, b in zip(sampled[:-1], sampled[1:])
+                    if a[1] is not None and b[1] is not None and a[1][0] * b[1][0] < 0]
+        candidate = try_brackets(brackets)
+    if candidate is not None:
+        yp, state = candidate
+        f_mid, rho_n, rho_p, sol, eom, st, mu_e = state
+    elif valid:
+        yp, state = min(valid, key=lambda item: abs(item[1][0]))
+        f_mid, rho_n, rho_p, sol, eom, st, mu_e = state
     else:
-        def scalar_residual(y):
-            return beta_residual(float(y), field_guess)[0]
-        yp = brentq(scalar_residual, yp_lo, yp_hi, xtol=tol, rtol=tol, maxiter=max_iter)
-        _, rho_n, rho_p, sol, eom, st, mu_e = beta_residual(yp, field_guess)
+        raise FieldConvergenceError(f'no converged fields in beta search at rho_b={rho_b}')
+    if not np.isfinite(f_mid) or abs(f_mid) > BETA_RESIDUAL_TOL_MEV:
+        raise RuntimeError(f'beta root failed at rho_b={rho_b}: residual={f_mid:.6g} MeV')
 
     eps_b = float(compiled_model.energy_numeric(sol, rho_n, rho_p, params))
     p_b = rho_n * st['mu_n'] + rho_p * st['mu_p'] - eps_b
@@ -325,24 +369,14 @@ def solve_beta_equilibrium_point(
         if abs(f_mid) > 1e-4:
             raise RuntimeError(f'beta equilibrium root not bracketed at rho_b={rho_b}; best residual={f_mid}')
     else:
-        lo = yp_lo
-        hi = yp_hi
-        data = None
-        yp = proton_fraction_guess
-        for _ in range(max_iter):
-            yp = 0.5 * (lo + hi)
-            f_mid, data_mid = residual(yp)
-            data = data_mid
-            if abs(f_mid) < tol or abs(hi - lo) < tol:
-                break
-            if f_lo * f_mid <= 0.0:
-                hi = yp
-                f_hi = f_mid
-            else:
-                lo = yp
-                f_lo = f_mid
+        yp = brentq(lambda y: residual(y)[0], yp_lo, yp_hi,
+                    xtol=min(tol, 1e-12), rtol=min(tol, 1e-12), maxiter=max_iter)
+        _, data = residual(yp)
 
     rho_n, rho_p, rho_e, mu_n, mu_p, mu_e = data
+    beta_error = mu_n - mu_p - mu_e
+    if not np.isfinite(beta_error) or abs(beta_error) > BETA_RESIDUAL_TOL_MEV:
+        raise RuntimeError(f'beta root failed at rho_b={rho_b}: residual={beta_error:.6g} MeV')
     eps_b = float(epsilon_func(rho_n, rho_p))
     p_b = float(pressure_func(rho_n, rho_p))
     eps_e = electron_energy_density_mev_fm3(rho_e, m_e=m_e)

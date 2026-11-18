@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the associated paper."
+title: "RMF Skill Benchmark and Toolkit"
+type: software
+authors:
+  - family-names: Ma
+    given-names: Yao
+  - family-names: Ma
+    given-names: Yong-Liang
+  - family-names: Xiong
+    given-names: Jia-Ying
+identifiers:
+  - type: arxiv
+    value: "2607.13930"
+    description: "Associated paper"

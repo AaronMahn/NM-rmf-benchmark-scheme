@@ -1,5 +1,6 @@
 import sys, os, json, random, subprocess, glob, time
-ROOT=os.environ.get("P26_ROOT",os.path.expanduser("~/P26exp")); HOME=os.path.expanduser("~")
+from runtime_config import OPENCLAW_HOME
+ROOT=os.environ.get("P26_ROOT",os.path.expanduser("~/P26exp"))
 MODELS={"gpt55":"openrouter/openai/gpt-5.5","claude":"openrouter/anthropic/claude-opus-4.8",
         "gemini":"google/gemini-3.1-pro-preview","qwen":"dashscope/qwen3.7-max",
         "deepseek":"deepseek/deepseek-v4-pro","kimi":"moonshot/kimi-k2.6"}
@@ -8,10 +9,13 @@ MAN=f"{ROOT}/results/parallel_manifest.json"
 model=sys.argv[1]
 man=json.load(open(MAN)) if os.path.exists(MAN) else {}
 samples = man[model]["samples"] if model in man else sorted(random.sample(range(100),NS))
-env=dict(os.environ); env["PATH"]="/opt/homebrew/bin:"+env.get("PATH","")
+env=dict(os.environ)
+env["OPENCLAW_HOME"] = str(OPENCLAW_HOME)
+env["P26_REPO"] = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+env["PYTHONPATH"] = os.pathsep.join([os.path.join(env["P26_REPO"], "harness"), env.get("PYTHONPATH", "")]).rstrip(os.pathsep)
 subprocess.run(["openclaw","hooks","disable","session-memory"],env=env)
 def hygiene(agent):
-    sd=f"{HOME}/.openclaw/agents/{agent}/sessions"
+    sd=str(OPENCLAW_HOME / "agents" / agent / "sessions")
     for f in glob.glob(sd+"/*.jsonl")+glob.glob(sd+"/*.lock")+glob.glob(sd+"/sessions.json"):
         try: os.remove(f)
         except OSError: pass

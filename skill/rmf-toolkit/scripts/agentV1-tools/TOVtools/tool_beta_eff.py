@@ -14,6 +14,7 @@ class CompiledBetaModel:
     mass_p_numeric: callable
     mass_n_numeric: callable
     energy_numeric: callable
+    chemical_potentials_numeric: callable | None = None
 
 
 def compile_beta_effective_model(analytic, params: dict) -> CompiledBetaModel:
@@ -54,6 +55,15 @@ def compile_beta_effective_model(analytic, params: dict) -> CompiledBetaModel:
     for expr, _label in analytic.energy_density_terms:
         fn = sp.lambdify(field_symbols + param_symbols + [eps_fermion_sym, rho_B_sym, rho_3_sym], expr, 'numpy')
         energy_term_fns.append(fn)
+
+    # At fixed stationary fields the envelope derivative gives E_F* plus the
+    # explicit density derivative of the energy. Derive vector shifts from the
+    # symbolic model rather than assuming particular coupling parameter names.
+    vector_b = sp.diff(analytic.energy_density_expr, rho_B_sym)
+    vector_3 = sp.diff(analytic.energy_density_expr, rho_3_sym)
+    vector_args = field_symbols + param_symbols + [rho_B_sym, rho_3_sym]
+    vp_fn = sp.lambdify(vector_args, vector_b + vector_3, 'numpy')
+    vn_fn = sp.lambdify(vector_args, vector_b - vector_3, 'numpy')
 
     default_param_values = [params[sym.name] for sym in param_symbols]
 
@@ -108,10 +118,20 @@ def compile_beta_effective_model(analytic, params: dict) -> CompiledBetaModel:
             total_nat += float(fn(*args))
         return float(total_nat / (HBARC**3))
 
+    def chemical_potentials_numeric(x, rho_n, rho_p, params_override=None):
+        rho_b = (rho_n + rho_p) * HBARC**3
+        rho_3 = (rho_p - rho_n) * HBARC**3
+        args = list(map(float, x)) + _param_values(params_override) + [rho_b, rho_3]
+        mp, mn = mass_p_numeric(x, params_override), mass_n_numeric(x, params_override)
+        kp, kn = kf_from_rho_fm3(rho_p), kf_from_rho_fm3(rho_n)
+        return (float(np.sqrt(kp*kp + mp*mp) + vp_fn(*args)),
+                float(np.sqrt(kn*kn + mn*mn) + vn_fn(*args)))
+
     return CompiledBetaModel(
         field_names=field_names,
         eom_numeric=eom_numeric,
         mass_p_numeric=mass_p_numeric,
         mass_n_numeric=mass_n_numeric,
         energy_numeric=energy_numeric,
+        chemical_potentials_numeric=chemical_potentials_numeric,
     )
