@@ -1,0 +1,36 @@
+{
+  "title": "NNStar: relativistic mean-field skill, toolkit, and benchmark",
+  "version": "1.0.0",
+  "upload_type": "software",
+  "description": "Release accompanying the revised manuscript 'NNStar: An End-to-end AI Agent for Nuclear Matter and Neutron Star Physics' (Y. Ma, Y.-L. Ma, J.-Y. Xiong). Contains the NNStar skill, the benchmark suite and reference targets, and the scripts that reproduce the paper's tables and figures.",
+  "creators": [
+    {
+      "name": "Ma, Yao",
+      "affiliation": "Nanjing University"
+    },
+    {
+      "name": "Ma, Yong-Liang",
+      "affiliation": "Nanjing University"
+    },
+    {
+      "name": "Xiong, Jia-Ying",
+      "affiliation": "Nanjing University"
+    }
+  ],
+  "license": "MIT",
+  "access_right": "open",
+  "related_identifiers": [
+    {
+      "identifier": "arXiv:2607.13930",
+      "relation": "isSupplementTo",
+      "scheme": "arxiv"
+    }
+  ],
+  "keywords": [
+    "nuclear matter",
+    "neutron stars",
+    "relativistic mean field",
+    "LLM agent",
+    "equation of state"
+  ]
+}

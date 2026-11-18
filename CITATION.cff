@@ -1,7 +1,10 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite the associated paper."
-title: "RMF Skill Benchmark and Toolkit"
+title: "NNStar: relativistic mean-field skill, toolkit, and benchmark"
 type: software
+version: "1.0.0"
+license: MIT
+repository-code: "https://github.com/AaronMahn/NM-rmf-benchmark-scheme"
 authors:
   - family-names: Ma
     given-names: Yao
